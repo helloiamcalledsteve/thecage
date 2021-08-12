@@ -14,7 +14,7 @@
 ## Structure
 |    CodeBase(dir) | Use and Description | Creator   |
 |-----------------:|---------------------|-----------|
-| [packages/api](tree/master/packages/api)     | API Backend         | smallzeno |
+| [packages/api](packages/api)     | API Backend         | smallzeno |
 | [packages/web](packages/web)     | Website Frontend    | smallzeno |
 | [packages/web/Components](packages/web/tac) | Tokens              | smallzeno |
 
