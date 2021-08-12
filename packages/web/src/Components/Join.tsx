@@ -1,3 +1,4 @@
+/*imports */
 import axios from 'axios';
 import React, { useState } from 'react';
 import Cookies from 'universal-cookie/es6';
@@ -10,116 +11,90 @@ const Join = () => {
     const [gameID, setGameID] = useState('game1');
     const [id, setId] = useState(null);
     const [players, setPlayers] = useState([null]);
-    const [playersPrint, setPlayersPrint] = useState(false);
-    let playersPre: any = [];
-    let dataFor;
-    function getData(evnt: any) {
-        setName(evnt.target.value);
-    }
-    function getId(evnt: any) {
-        setId(evnt.target.value);
-    }
-    function getGameId(evnt: any) {
-        setGameID(evnt.target.value);
-    }
-    const genToken = async () => {
-        let name = cookies.get('name');
-        const json = JSON.stringify({ "name": name, "query": "game1" });
-        const url = 'http://localhost:3001/gentoken?'
-        const urldata = url.concat(json);
-        console.log(urldata);
-        let res = await axios.get(urldata)
-        let token = res.data.data;
-        console.log(token);
-        return token;
+    const [/*playersPrint*/, setPlayersPrint] = useState(false);
+    let playersPre: string[] = [];
+    let getData = (evnt: any) =>  { setName(evnt.target.value) };
+    let getId = (evnt: any) => { setId(evnt.target.value) };
+    let getGameId = (evnt: any) => { setGameID(evnt.target.value) };
+    let getGamesAPI:Function = async () => { return await axios.get('http://localhost:3001/getgames');}
+
+
+    let genToken = async () => {
+        const json:string = JSON.stringify({ "name": cookies.get('name'), "query": "game1" });
+        const url:string = `http://localhost:3001/gentoken?${json}`
+        let res = await axios.get(url);
+        console.log(res.data.data);
+        return res.data.data;
     }
     const makeGame = async () => {
-        let a = await genToken();
-        let localGameId:string = gameID;
-        const url = 'http://localhost:3001/makeserver?id=';
-        let urldata = url.concat(a);
-        let urldata2 = urldata.concat('&game=')
-        let urldata3 = urldata2.concat(localGameId);
-        let res = await axios.get(urldata3)
-        let port = res.data.port;
-        let id = res.data.gameId;
-        console.log(port, id)
+        const urlForAxiosRes:string = `http://localhost:3001/makeserver?id=${await genToken()}&game=${gameID}`;
+        let res = await axios.get(urlForAxiosRes)
+        console.log(res.data.port, res.data.gameId)
     }
     const getGames = async () => {
-        let res = await axios.get('http://localhost:3001/getgames');
-        let games = res.data.data;
-        let port = res.data.port;
-        let sort1 = res.data.data;
-        let sort2 = res.data.port;
-        let b = games.toString();
-        setData(b);
+        let res = await getGamesAPI();
+        setData(res.data.data.toString());
         console.log(print);
-        for (let i: any; i < sort1.length; i++) {
-            document.getElementById('a')!.innerHTML = games[i];
-        }
- 
-        console.log(games, port);
+        console.log(res.data.data, res.data.port);
         console.log(id);
-        return { games, port };
     }
     let joinGame = async () => {
-        let res = await axios.get('http://localhost:3001/getgames');
+        let res = await getGamesAPI();
         let games: String[] = res.data.data;
-        // let name = cookies.get('name');
         let port = res.data.port;
-        let localid: any = id;
-        let g = games.indexOf(localid)
-        let chosenPort = port[g];
-        cookies.set('port', chosenPort);
-        // let checkUrl = 'http://localhost:' + chosenPort + '/getplayers';
-        // let checkRes = await axios.get(checkUrl);
-        // let players = checkRes.data;
-        let token = await genToken();
-        console.log(token);
-        let baseUrl = 'http://localhost:' + chosenPort + '/?id=' + token;
-        let join = await axios.get(baseUrl);
-        console.log(join)
+        let localid: string | number | null | undefined | any = id;
+        cookies.set('port', port[games.indexOf(localid)]);
+        console.log(await genToken());
+        try {
+            let url = `http://localhost:${port[games.indexOf(localid)]}/?id=${await genToken()}`;
+            console.log(await axios.get(url))
+        } catch (err) {
+            console.error(err);
+        }
 
     }
     let getPlayers = async () => {
-        let res = await axios.get('http://localhost:3001/getgames');
-        let games: String[] = res.data.data;
+        let res = await getGamesAPI();
         let port = res.data.port;
-        let localid: any = id;
-        let indexOf = games.indexOf(localid);
-        let portForApi = port[indexOf];
-        let sendForPlayers = await axios.get(`http://localhost:${portForApi}/getplayers`);
-        let data: any = sendForPlayers.data;
-        setPlayers(data.toString());
-        let players1 = res.data.data;
-        console.log(players1);
+        let localid: string | undefined | null | number = id;
+        let portForApi = port[res.data.data.indexOf(localid)];
+        try {
+            let sendForPlayers = await axios.get(`http://localhost:${portForApi}/getplayers`);
+            setPlayers(sendForPlayers.data.toString());
+            console.log(res.data.data);
+        } catch (e) {
+            console.log(e);
+        }
+
         return players;
     }
     let getAllPlayers = async () => {
-        let res = await axios.get('http://localhost:3001/getgames');
-        let port = res.data.port;
-        for (let i:number = 0; i < port.length; i++) {
-            let sendForPlayers = await axios.get(`http://localhost:${port[i]}/getplayers`);
-            let data: any = sendForPlayers.data;
-            playersPre.push(data.toString())
+        let res = await getGamesAPI();
+        for (let i: number = 0; i < res.data.port.length; i++) {
+            try {
+                let sendForPlayers = await axios.get(`http://localhost:${res.data.port[i]}/getplayers`);
+                playersPre.push(sendForPlayers.data.toString())
+            } catch (err) {
+                console.error(err);
+            }
+
         }
-        let b = playersPre.toString();
-        let g:any = b.split(' ');
-        setPlayers(g);
+        let playerPreSplited:string[] | any = playersPre.toString().split(' ');
+        setPlayers(playerPreSplited);
     }
     let leaveGame = async () => {
-        let res = await axios.get('http://localhost:3001/getgames');
-        let games: String[] = res.data.data;
-        let port = res.data.port;
+        let res = await getGamesAPI();
         let localid: any = id;
-        let indexOf = games.indexOf(localid);
-        let portForApi = port[indexOf];
-        let x = await genToken();
-        console.log(x);
-        let leaveGameUrl = `http://localhost:${portForApi}/get?id=${x}`;
-        console.log(leaveGameUrl);
-        let leaveGame = await axios.get(`http://localhost:${portForApi}/get?id=${x}`);
-        console.log(leaveGame);
+        let portForApi = res.data.port[res.data.data.indexOf(localid)];
+        let token = await genToken();
+        try {
+            let leaveGameUrl = `http://localhost:${portForApi}/get?id=${token}`;
+            console.log(leaveGameUrl);
+            console.log(await axios.get(`http://localhost:${portForApi}/get?id=${token}`));
+        } catch (err){
+            console.error(err);
+        }
+
     }
     let loadAll = async () => {
         try {
