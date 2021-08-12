@@ -14,9 +14,9 @@
 ## Structure
 |    CodeBase(dir) | Use and Description | Creator   |
 |-----------------:|---------------------|-----------|
-| [packages/api](Packages/Api)     | API Backend         | smallzeno |
-| [packages/web](Packages/web)     | Website Frontend    | smallzeno |
-| [packages/web/Components](Packages/web/tac) | Tokens              | smallzeno |
+| [packages/api](packages/Api)     | API Backend         | smallzeno |
+| [packages/web](packages/web)     | Website Frontend    | smallzeno |
+| [packages/web/Components](packages/web/tac) | Tokens              | smallzeno |
 
 ## Branches
 master -> don't touch this init
