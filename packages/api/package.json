@@ -209,7 +209,8 @@
     "build": "tsc",
     "test": "ts-node src/index.ts",
     "watch": "nodemon",
-    "all": "yarn build && yarn watch"
+    "all": "yarn build && yarn watch",
+    "testthenrun": "yarn watch && yarn test"
   },
   "keywords": [],
   "author": "",
