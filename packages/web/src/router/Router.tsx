@@ -1,11 +1,11 @@
-import { Route, Switch, BrowserRouter } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import App from "../App";
 import NoMatch from "../Components/NoMatch";
 import Join from "../Components/Join";
 
-const Routes = (() => {
+const Routes = () => {
     return (
-        <BrowserRouter>
+        <Router>
             <Switch>
                 <Route exact path="/" component={App} />
                 <Route exact path="/play" component={Join} />
@@ -13,8 +13,8 @@ const Routes = (() => {
                     <NoMatch />
                 </Route>
             </ Switch>
-        </BrowserRouter>
+        </Router>
     )
-})
+}
 
 export default Routes;
