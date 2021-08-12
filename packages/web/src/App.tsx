@@ -4,8 +4,8 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <p>goto /play it is in PROD!!</p>
+      <header className="center-block">
+        <p className="center">goto /play it is in PROD!!</p>
       </header>
     </div>
   );
