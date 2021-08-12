@@ -1,0 +1,12 @@
+.nomatch {
+    position: relative;
+    color: white;
+    text-align: center;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.text {
+    color: white;
+    text-align: center;
+    font-family: 'Roboto Mono', monospace;
+}
