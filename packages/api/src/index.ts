@@ -10,37 +10,6 @@ var app = express();
 
 let games: any[] = [];
 let port: any[] = [];
-// let datas: string = '{data: []}';
-
-
-// function contains(obj:any) {
-//     var i = games.length;
-//     while (i--) {
-//         if (games[i] === obj) {
-//             return true;
-//         }
-//     }
-//     return false;
-// }
-
-// let makeRandom = async () => {
-//     let a = () => { let b = Math.floor(Math.random() * 100); return b;}
-//     let number = a();
-//     let check = contains(number);
-//     if (check) {
-//         games.push(number);
-//         return number;
-//     } else if (!check) {
-//         makeRandom();
-//     }
-//     return 0;
-// }
-
-// let makeRandom = () => {
-//     let game = req.query.game;
-//     games.push(o);
-//     return a;
-// }
 
 app.get('/', cors(), (_req, res) => {
     res.redirect('/gentoken')
